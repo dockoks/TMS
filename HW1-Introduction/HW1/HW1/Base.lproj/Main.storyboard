@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="32700.99.1234" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22685"/>
+        <capability name="Map view configurations" minToolsVersion="14.0"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="HW1" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="12" translatesAutoresizingMaskIntoConstraints="NO" id="4ZZ-uI-BOl">
+                                <rect key="frame" x="0.0" y="83" width="393" height="498"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="fc0-90-vbg">
+                                        <rect key="frame" x="32" y="0.0" width="329" height="37"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="290" id="D0Z-lh-K2n"/>
+                                            <constraint firstAttribute="height" constant="36" id="kEZ-IJ-zI0"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="First"/>
+                                            <segment title="Second"/>
+                                            <segment title="Third"/>
+                                            <segment title="Forth"/>
+                                            <segment title="Fifth"/>
+                                        </segments>
+                                    </segmentedControl>
+                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6FO-MY-5aN">
+                                        <rect key="frame" x="172" y="48" width="51" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="zOL-IA-VZh"/>
+                                        </constraints>
+                                    </switch>
+                                    <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Yog-ur-Aeu">
+                                        <rect key="frame" x="149.66666666666666" y="96" width="94" height="32"/>
+                                    </stepper>
+                                    <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="KUt-X2-5HM">
+                                        <rect key="frame" x="-2" y="140" width="397" height="37"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="Sgb-4z-y4T"/>
+                                        </constraints>
+                                    </slider>
+                                    <datePicker contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="dSR-8G-gIH">
+                                        <rect key="frame" x="31.666666666666657" y="188" width="330" height="36"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="36" id="KbW-1i-A4b"/>
+                                        </constraints>
+                                    </datePicker>
+                                    <mapView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FVW-w9-29c">
+                                        <rect key="frame" x="0.0" y="236" width="393" height="262"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="FVW-w9-29c" secondAttribute="height" multiplier="3:2" id="MEa-fi-chk"/>
+                                        </constraints>
+                                        <standardMapConfiguration key="preferredConfiguration"/>
+                                    </mapView>
+                                </subviews>
+                                <viewLayoutGuide key="safeArea" id="1Sw-lu-1oZ"/>
+                                <constraints>
+                                    <constraint firstItem="FVW-w9-29c" firstAttribute="leading" secondItem="1Sw-lu-1oZ" secondAttribute="leading" id="0en-4m-EmZ"/>
+                                    <constraint firstItem="KUt-X2-5HM" firstAttribute="leading" secondItem="1Sw-lu-1oZ" secondAttribute="leading" id="0nI-r7-fVd"/>
+                                    <constraint firstItem="FVW-w9-29c" firstAttribute="trailing" secondItem="1Sw-lu-1oZ" secondAttribute="trailing" id="RQ4-Cv-Y8C"/>
+                                    <constraint firstItem="KUt-X2-5HM" firstAttribute="trailing" secondItem="1Sw-lu-1oZ" secondAttribute="trailing" id="roC-53-yNv"/>
+                                </constraints>
+                            </stackView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="4ZZ-uI-BOl" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="24" id="cxu-bz-Q9Y"/>
+                            <constraint firstItem="4ZZ-uI-BOl" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="sY5-L7-6OB"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="4ZZ-uI-BOl" secondAttribute="trailing" id="u4O-wW-Fkh"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="119.84732824427481" y="3.5211267605633805"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
