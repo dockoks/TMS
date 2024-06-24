@@ -38,7 +38,7 @@ import Foundation
 class Person {
     let name: String
     let surname: String
-    var age: Int
+    let age: Int
 
     init(
         name: String,
@@ -64,8 +64,8 @@ enum Subject: String {
 
 // Student
 final class Student: Person {
-    var grade: Int
-    var subjectGrades: [(Subject, Int)]
+    private let grade: Int
+    private let subjectGrades: [(Subject, Int)]
     
     init(
         name: String,
@@ -99,8 +99,8 @@ final class Student: Person {
 
 // Director
 final class Director: Person {
-    var experience: Int
-    var rating: Double
+    let experience: Int
+    let rating: Double
 
     init(
         name: String,
@@ -128,13 +128,13 @@ struct Address {
 }
 
 // School
-final class School {
+struct School {
     private let name: String
     private let address: Address
-    private let students: [Student]
     private let director: Director
+    private let students: [Student]
     
-    init(
+    public init(
         name: String,
         address: Address,
         director: Director,
