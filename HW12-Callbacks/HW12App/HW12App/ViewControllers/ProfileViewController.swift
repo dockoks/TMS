@@ -1,5 +1,41 @@
 import UIKit
 
+struct Cell {
+    let title: String
+    let value: () -> String?
+}
+
+enum ProfileSection: Int, CaseIterable {
+    case general
+    case interests
+    
+    var title: String {
+        switch self {
+        case .general:
+            return "General"
+        case .interests:
+            return "Interests"
+        }
+    }
+    
+    var cells: [Cell] {
+        switch self {
+        case .general:
+            return [
+                Cell(title: "Name") { ProfileModel.shared.stringValue(for: .name) },
+                Cell(title: "Surname") { ProfileModel.shared.stringValue(for: .surname) },
+                Cell(title: "Age") { ProfileModel.shared.stringValue(for: .age) },
+                Cell(title: "Sex") { ProfileModel.shared.stringValue(for: .sex) },
+                Cell(title: "Birthday") { ProfileModel.shared.stringValue(for: .birthday) }
+            ]
+        case .interests:
+            return [
+                Cell(title: "Interests", value: { ProfileModel.shared.stringValue(for: .interests) })
+            ]
+        }
+    }
+}
+
 final class ProfileViewController: UIViewController {
     private var profile = ProfileModel.shared
     private let tableView: UITableView
@@ -36,21 +72,22 @@ final class ProfileViewController: UIViewController {
         ])
         
         tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.reuseIdentifier)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "InterestCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: CellIdentifiers.interestCell)
         tableView.dataSource = self
         tableView.delegate = self
     }
     
     @objc func editProfileField(_ sender: UIButton) {
-        guard let cell = sender.superview?.superview as? ProfileTableViewCell else { return }
-        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        guard let cell = sender.superview?.superview as? ProfileTableViewCell,
+              let indexPath = tableView.indexPath(for: cell),
+              let profileSection = ProfileSection(rawValue: indexPath.section) else { return }
         
-        var propertyKey: PropertyKey
-        var propertyValue: Any?
-        var propertyType: PropertyType
-        
-        switch indexPath.section {
-        case 0:
+        switch profileSection {
+        case .general:
+            let propertyKey: PropertyKey
+            let propertyValue: Any?
+            let propertyType: PropertyType
+            
             switch indexPath.row {
             case 0:
                 propertyKey = .name
@@ -75,6 +112,7 @@ final class ProfileViewController: UIViewController {
             default:
                 return
             }
+            
             let editVC = EditPropertyViewController(
                 propertyKey: propertyKey,
                 propertyValue: propertyValue,
@@ -82,52 +120,48 @@ final class ProfileViewController: UIViewController {
             )
             editVC.delegate = self
             navigationController?.pushViewController(editVC, animated: true)
-        case 1:
+            
+        case .interests:
             let interestVC = InterestViewController(interests: profile.interests ?? [])
             interestVC.delegate = self
             navigationController?.pushViewController(interestVC, animated: true)
-        default:
-            return
         }
     }
 }
 
-extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
+extension ProfileViewController: UITableViewDataSource {
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 2
+        return ProfileSection.allCases.count
     }
     
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return section == 0 ? "General" : "Interests"
+        guard let profileSection = ProfileSection(rawValue: section) else { return nil }
+        return profileSection.title
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return section == 0 ? 5 : 1
+        guard let profileSection = ProfileSection(rawValue: section) else { return 0 }
+        return profileSection.cells.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let profileSection = ProfileSection(rawValue: indexPath.section) else {
+            return UITableViewCell()
+        }
+        
+        let cellData = profileSection.cells[indexPath.row]
         guard let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.reuseIdentifier, for: indexPath) as? ProfileTableViewCell else {
             return UITableViewCell()
         }
-        if indexPath.section == 0 {
-            switch indexPath.row {
-            case 0: cell.configure(with: "Name", value: profile.stringValue(for: .name))
-            case 1: cell.configure(with: "Surname", value: profile.stringValue(for: .surname))
-            case 2: cell.configure(with: "Age", value: profile.stringValue(for: .age))
-            case 3: cell.configure(with: "Sex", value: profile.stringValue(for: .sex))
-            case 4: cell.configure(with: "Birthday", value: profile.stringValue(for: .birthday))
-            default: break
-            }
-            cell.editButton.addTarget(self, action: #selector(editProfileField(_:)), for: .touchUpInside)
-            return cell
-        } else {
-            cell.configure(with: "Interests", value: profile.stringValue(for: .interests))
-            cell.editButton.addTarget(self, action: #selector(editProfileField(_:)), for: .touchUpInside)
-            return cell
-        }
+        
+        cell.configure(with: cellData.title, value: cellData.value())
+        cell.editButton.addTarget(self, action: #selector(editProfileField(_:)), for: .touchUpInside)
+        return cell
     }
 }
+
+extension ProfileViewController: UITableViewDelegate {}
 
 extension ProfileViewController: ProfileModelDelegate {
     func didUpdateProfile() {
@@ -145,4 +179,8 @@ extension ProfileViewController: EditPropertyViewControllerDelegate {
     func didSaveProperty(key: PropertyKey, value: Any?) {
         profile.update(propertyKey: key, value: value)
     }
+}
+
+private enum CellIdentifiers {
+    static let interestCell = "InterestCell"
 }
