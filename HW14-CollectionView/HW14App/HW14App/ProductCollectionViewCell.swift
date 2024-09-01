@@ -64,6 +64,14 @@ final class ProductCollectionViewCell: UICollectionViewCell {
         ])
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        iconImageView.image = nil
+        modelLabel.text = nil
+        iconImageView.tintColor = nil
+        iconWrapperView.backgroundColor = .clear
+    }
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
