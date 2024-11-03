@@ -1,0 +1,8 @@
+"name_label" = "Имя";
+"surname_label" = "Фамилия";
+"save_button_title" = "Созранить";
+"edit_button_title" = "Изменить";
+"add_header_label" = "Добавить др";
+"birthdays_header_label" = "Дни рождения";
+"birthday_title" = "Напоминалка";
+"birthday_message" = "Завтра день рождения у %@ %@!";
