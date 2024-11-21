@@ -1,0 +1,8 @@
+"name_label" = "Name";
+"surname_label" = "Surname";
+"save_button_title" = "Save";
+"edit_button_title" = "Surname";
+"add_header_label" = "Add Birthday";
+"birthdays_header_label" = "Birthdays";
+"birthday_title" = "Birthday reminder";
+"birthday_message" = "It's %@ %@'s birthday tomorrow!";
