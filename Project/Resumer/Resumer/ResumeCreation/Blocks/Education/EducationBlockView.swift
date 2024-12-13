@@ -12,18 +12,16 @@ struct EducationBlockView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 4) {
+            VStack(spacing: 8) {
                 ForEach($viewModel.tiles) { $tile in
                     EducationTileView(tile: $tile)
-                        .padding(.horizontal, 12)
+                        .padding(.horizontal, 16)
                         .swipeActions(
                             edge: .trailing,
                             allowsFullSwipe: true
                         ) {
                             Button(role: .destructive) {
-                                if let index = viewModel.tiles.firstIndex(where: { $0.id == tile.id }) {
-                                    viewModel.tiles.remove(at: index)
-                                }
+                                viewModel.removeTile(by: $tile.id)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
@@ -36,8 +34,9 @@ struct EducationBlockView: View {
             ) {
                 viewModel.addTile()
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 8)
+            .padding(.horizontal, 16*2+48)
+            .padding(.top, 8)
+            .padding(.bottom, 16)
             .dismissKeyboardOnTap()
         }
         .scrollIndicators(.hidden)
@@ -45,5 +44,7 @@ struct EducationBlockView: View {
 }
 
 #Preview {
-    EducationBlockView()
+    @Previewable @ObservedObject var vm = EducationBlockVM.init(tiles: [.init()])
+    
+    EducationBlockView(viewModel: vm)
 }

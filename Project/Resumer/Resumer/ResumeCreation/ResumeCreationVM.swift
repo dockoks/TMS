@@ -8,7 +8,44 @@
 
 import SwiftUI
 
-class ResumeCreationVM: ObservableObject {
+enum Block: CaseIterable {
+    case template
+    case basic
+    case contact
+    case education
+    case work
+    case skill
+    case language
+    case preview
+    
+    var displayName: String {
+        return switch self {
+        case .template: "Template"
+        case .basic: "Basic Info"
+        case .contact: "Contacts"
+        case .education: "Education"
+        case .work: "Work"
+        case .skill: "Skills"
+        case .language: "Languages"
+        case .preview: "Preview"
+        }
+    }
+    
+    var icon: Image {
+        return switch self {
+        case .template: Image(systemName: "paintpalette.fill")
+        case .basic: Image(systemName: "person.fill")
+        case .contact: Image(systemName: "phone.fill")
+        case .education: Image(systemName: "graduationcap.fill")
+        case .work: Image(systemName: "case.fill")
+        case .skill: Image(systemName: "theatermask.and.paintbrush.fill")
+        case .language: Image(systemName: "globe.europe.africa.fill")
+        case .preview: Image(systemName: "text.page.fill")
+        }
+    }
+}
+
+class ResumeCreationVM: ObservableObject, Identifiable {
     @Published var currentPage: Int = 0
     @Published var isDismissed: Bool = false
     @Published var pdfURL: URL?
@@ -42,7 +79,7 @@ class ResumeCreationVM: ObservableObject {
         case 1: return contactVM.isFilled
         case 2: return educationVM.isFilled
         case 3: return workVM.isFilled
-        case 4: return !skillVM.skills.isEmpty
+        case 4: return skillVM.isFilled
         case 5: return languageVM.isFilled
         default: return false
         }
@@ -61,4 +98,64 @@ class ResumeCreationVM: ObservableObject {
             currentPage += 1
         }
     }
+    
+    static let mock = ResumeCreationVM(
+        basicInfo: .init(
+            avatar: nil,
+            name: "John",
+            surname: "Doe",
+            jobTitle: "iOS Developer"
+        ),
+        contact: .init(
+            email: "johndoe@example.com",
+            phone: "+346581234567",
+            address: "123 Main Street, Springfield, USA",
+            additionalLinks: [
+                .init(key: .linkedIn, value: "johndoe"),
+                .init(key: .github, value: "johndoe-dev")
+            ]
+        ),
+        education: .init(
+            tiles: [
+                .init(
+                    affiliation: "Springfield University",
+                    specialisation: "Computer Science",
+                    degree: .postgraduate,
+                    startDate: Date(timeIntervalSinceNow: -4 * 365 * 24 * 60 * 60), // 4 years ago
+                    endDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
+                    isPresent: false,
+                    description: "Learned programming, data structures, and algorithms."
+                )
+            ]
+        ),
+        work: .init(
+            tiles: [
+                .init(
+                    company: "TechCorp",
+                    position: "Junior iOS Developer",
+                    startDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
+                    endDate: Date(),
+                    isPresent: true,
+                    description: "Developed and maintained iOS applications for e-commerce clients."
+                )
+            ]
+        ),
+        skill: .init(
+            skills: ["Swift", "SwiftUI", "Combine", "Core Data"]
+        ),
+        language: .init(
+            tiles: [
+                .init(
+                    name: "English",
+                    chosenProficiency: 4,
+                    proficiency: .c2
+                ),
+                .init(
+                    name: "Spanish",
+                    chosenProficiency: 3,
+                    proficiency: .b2
+                )
+            ]
+        )
+    )
 }

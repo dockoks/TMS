@@ -13,36 +13,36 @@ struct SkillBlockView: View {
     @State var skillText: String = ""
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            // TextField to input skills
+        VStack(alignment: .leading, spacing: 12) {
             RTextField(
                 text: $skillText,
                 symbolLimit: 20,
                 placeholder: "Enter a skill"
+            )
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(ColorPalette.Bg.accent)
             )
             .onSubmit {
                 addSkill()
             }
             
             FlowLayout(items: viewModel.skills, spacing: 8) { skill, index in
-                HStack(spacing: 4) {
+                Button {
+                    viewModel.removeSkill(at: index)
+                    
+                } label: {
                     Text(skill)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-                        .background(Color.blue.opacity(0.2))
-                        .cornerRadius(16)
-                        .foregroundColor(.blue)
-                    
-                    Button {
-                        viewModel.removeSkill(at: index)
-                    } label: {
-                        Image(systemName: "xmark.circle.fill")
-                            .foregroundColor(.red)
-                    }
+                        .foregroundColor(.black)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                                .fill(ColorPalette.Bg.layerOne)
+                        )
                 }
-                .padding(.vertical, 4)
             }
-            
             Spacer()
         }
         .padding(.horizontal, 16)
@@ -59,10 +59,10 @@ struct SkillBlockView: View {
     SkillBlockView()
 }
 
-class SkillBlockVM: ObservableObject {
+class SkillBlockVM: ObservableObject, Fillable {
     @Published var skills: [String]
     
-    init(skills: [String] = ["Swift", "SwiftUI", "UIKit", "CoreData", "CoreLocation", "Combine"]) {
+    init(skills: [String] = []) {
         self.skills = skills
     }
     
@@ -74,5 +74,9 @@ class SkillBlockVM: ObservableObject {
     func removeSkill(at index: Int) {
         guard index < skills.count && skills.count > 0 else { return }
         skills.remove(at: index)
+    }
+    
+    var isFilled: Bool {
+        return !skills.isEmpty
     }
 }

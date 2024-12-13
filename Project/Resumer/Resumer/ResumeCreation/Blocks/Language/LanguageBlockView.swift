@@ -12,28 +12,26 @@ struct LanguageBlockView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 4) {
+            VStack(spacing: 8) {
                 ForEach($viewModel.tiles) { $tile in
                     LanguageTileView(tile: $tile)
-                        .padding(.horizontal, 12)
+                        .padding(.horizontal, 16)
                         .swipeActions(
                             edge: .trailing,
                             allowsFullSwipe: true
                         ) {
                             Button(role: .destructive) {
-                                if let index = viewModel.tiles.firstIndex(where: { $0.id == tile.id }) {
-                                    viewModel.tiles.remove(at: index)
-                                }
+                                viewModel.removeTile(id: $tile.id)
                             } label: {
                                 Label("Delete", systemImage: "trash")
                             }
                         }
                 }
             }
-            RButton(title: "Add Period") {
+            RButton(style: .secondary, title: "Add Period") {
                 viewModel.addTile()
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 16)
             .padding(.vertical, 8)
             .dismissKeyboardOnTap()
         }
@@ -43,5 +41,7 @@ struct LanguageBlockView: View {
 }
 
 #Preview {
-    LanguageBlockView()
+    @Previewable @ObservedObject var vm = LanguageBlockVM.init(tiles: [.init()])
+    
+    LanguageBlockView(viewModel: vm)
 }

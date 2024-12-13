@@ -11,8 +11,7 @@ struct BasicInfoView: View {
     @ObservedObject var basicInfo: BasicInfoBlockVM = .init()
     
     var body: some View {
-        VStack(spacing: 0) {
-            Spacer()
+        VStack(spacing:40) {
             Button (action: {
                 print("select photo")
             }) {
@@ -21,7 +20,7 @@ struct BasicInfoView: View {
                         .resizable()
                         .frame(width: 100, height: 100)
                         .clipShape(Circle())
-                        .overlay(Circle().stroke(Color.gray, lineWidth: 1))
+                        .background(Circle().fill(Color.gray))
                 } else {
                     Circle()
                         .fill(ColorPalette.Outline.light)
@@ -36,7 +35,6 @@ struct BasicInfoView: View {
                 }
             }
             .buttonStyle(NoneButtonStyle())
-            Spacer()
             VStack(spacing: 8) {
                 RTextField(
                     text: $basicInfo.name,
@@ -54,11 +52,17 @@ struct BasicInfoView: View {
                     placeholder: "Job Title"
                 )
             }
-            
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(ColorPalette.Bg.accent)
+            )
             Spacer()
         }
-        .padding(.horizontal, 24)
+        .padding(.horizontal, 16)
+        .padding(.top, 40)
         .dismissKeyboardOnTap()
+        .gesture(DragGesture().onChanged { _ in })
     }
 }
 

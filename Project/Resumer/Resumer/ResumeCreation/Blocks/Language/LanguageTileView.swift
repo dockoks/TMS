@@ -18,7 +18,7 @@ struct LanguageTileView: View {
                 placeholder: "Language"
             )
             
-            TabBarView(
+            RSegmentedControlView(
                 currentTab: $tile.chosenProficiency,
                 tabBarOptions: ProfficiencyLevel.allCases.map {
                     $0.rawValue.capitalized
@@ -27,20 +27,17 @@ struct LanguageTileView: View {
         }
         .padding(12)
         .background {
-            RoundedRectangle(cornerRadius: 28)
-                .fill(ColorPalette.Bg.layerThree)
+            RoundedRectangle(cornerRadius: 16)
+                .fill(ColorPalette.Bg.accent)
         }
         .dismissKeyboardOnTap()
     }
 }
 
 #Preview {
+    @Previewable @State var tile: LanguageTileVM = .init(name: "English", proficiency: .b2)
+    
     LanguageTileView(
-        tile: .constant(
-            LanguageTileVM(
-                name: "English",
-                proficiency: .b2
-            )
-        )
+        tile: $tile
     )
 }

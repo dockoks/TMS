@@ -1,16 +1,16 @@
 import SwiftUI
 
 
-struct TabBarView: View {
+struct RSegmentedControlView: View {
     @Binding var currentTab: Int
     @Namespace var namespace
-
+    
     var tabBarOptions: [String]
-
+    
     var body: some View {
         HStack(spacing: 0) {
             ForEach(Array(tabBarOptions.enumerated()), id: \.offset) { id, name in
-                TabBarTabView(
+                RSegmentView(
                     currentTab: $currentTab,
                     namespace: namespace,
                     title: name,
@@ -19,7 +19,7 @@ struct TabBarView: View {
             }
         }
         .background {
-            RoundedRectangle(cornerRadius: 14)
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
                 .fill(.white)
                 .shadow(color: .black.opacity(0.04), radius: 0.5, x: 0, y: 3)
                 .shadow(color: .black.opacity(0.12), radius: 4, x: 0, y: 3)
@@ -31,14 +31,14 @@ struct TabBarView: View {
         }
         .padding(2)
         .background {
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
                 .fill(.gray.opacity(0.2))
         }
         .animation(.easeInOut, value: currentTab)
     }
 }
 
-struct TabBarTabView: View {
+struct RSegmentView: View {
     @Binding var currentTab: Int
     let namespace: Namespace.ID
     let title: String
@@ -48,14 +48,13 @@ struct TabBarTabView: View {
         Button {
             currentTab = tab
         } label: {
-            VStack(spacing: 4) {
-                Text(title)
-            }
-            .padding(4)
-            .frame(maxWidth: .infinity)
-            .typographyStyle(.caption)
-            .foregroundStyle(tab == currentTab ? .black : .gray)
-            .frame(height: 48)
+            Text(title)
+                .padding(4)
+                .frame(minWidth: 36, minHeight: 36)
+                .frame(maxWidth: .infinity)
+                .frame(height: 48)
+                .typographyStyle(.caption)
+                .foregroundStyle(tab == currentTab ? .black : .gray)
         }
         .matchedGeometryEffect(
             id: tab,

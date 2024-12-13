@@ -8,11 +8,14 @@
 import SwiftUI
 
 enum RIcon: String {
-    case chevron = "chevron.right"
+    case chevronL = "chevron.left"
+    case chevronR = "chevron.right"
     case star = "star.fill"
     case trash = "trash"
     case edit = "pencil"
-
+    case minus = "minus"
+    case link = "link"
+    
     var image: Image {
         Image(systemName: self.rawValue)
     }
@@ -21,49 +24,53 @@ enum RIcon: String {
 enum RIconButtonStyle {
     case primary
     case secondary
-    case tretiary
+    case tertiary
+}
+
+enum RIconButtonSize {
+    case L
+    case M
 }
 
 struct RIconButton: View {
-    let icon: RIcon
+    @State var icon: RIcon
     let style: RIconButtonStyle
-    
     @Binding var isEnabled: Bool
-    let cornerRadius: CGFloat
+    let size: RIconButtonSize
     let action: () -> Void
-
+    
     init(
-        icon: RIcon = .chevron,
+        icon: RIcon,
         style: RIconButtonStyle = .primary,
         isEnabled: Binding<Bool> = .constant(true),
-        cornerRadius: CGFloat = 16,
+        size: RIconButtonSize = .L,
         action: @escaping () -> Void
     ) {
         self.icon = icon
         self.style = style
         self.action = action
         self._isEnabled = isEnabled
-        self.cornerRadius = cornerRadius
+        self.size = size
     }
-
+    
     var body: some View {
-        Button(action: {
+        Button{
             if isEnabled {
                 action()
             }
-        }) {
-            ZStack {
-                ContinuousCornerShape(cornerRadius: cornerRadius)
-                    .fill(isEnabled ? bgColor : bgColorDisabled)
-                icon.image
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundStyle(isEnabled ? fgColor : fgColorDisabled)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .padding(12)
-            }
-            .frame(width: 48, height: 48)
+        } label: {
+            icon.image
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .foregroundStyle(isEnabled ? fgColor : fgColorDisabled)
+                .frame(width: iconSize, height: iconSize)
+                .background(
+                    RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
+                        .fill(isEnabled ? bgColor : bgColorDisabled)
+                        .frame(width: buttonSize, height: buttonSize)
+                )
         }
+        .frame(width: buttonSize, height: buttonSize)
         .scaleEffectOnPressGesture()
         .buttonStyle(CustomButtonStyle())
         .disabled(!isEnabled)
@@ -72,8 +79,8 @@ struct RIconButton: View {
     private var bgColor: Color {
         return switch style {
         case .primary: .blue
-        case .secondary: .gray.opacity(0.5)
-        case .tretiary: .clear
+        case .secondary: ColorPalette.Bg.layerThree
+        case .tertiary: ColorPalette.Bg.layerTwo
         }
     }
     
@@ -81,7 +88,7 @@ struct RIconButton: View {
         return switch style {
         case .primary: .blue.opacity(0.5)
         case .secondary: .gray.opacity(0.1)
-        case .tretiary: .clear
+        case .tertiary: .clear
         }
     }
     
@@ -89,7 +96,7 @@ struct RIconButton: View {
         return switch style {
         case .primary: .white
         case .secondary: .black.opacity(0.5)
-        case .tretiary: .black.opacity(0.3)
+        case .tertiary: .black.opacity(0.3)
         }
     }
     
@@ -97,11 +104,28 @@ struct RIconButton: View {
         return switch style {
         case .primary: .white
         case .secondary: .black.opacity(0.3)
-        case .tretiary: .black.opacity(0.1)
+        case .tertiary: .black.opacity(0.1)
         }
     }
-}
-
-#Preview {
-    RIconButton() {}
+    
+    private var cornerRadius: CGFloat {
+        switch size {
+        case .L: return 16
+        case .M: return 12
+        }
+    }
+    
+    private var buttonSize: CGFloat {
+        switch size {
+        case .L: return 48
+        case .M: return 36
+        }
+    }
+    
+    private var iconSize: CGFloat {
+        switch size {
+        case .L: return 24
+        case .M: return 20
+        }
+    }
 }

@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-class LanguageBlockVM: ObservableObject {
+class LanguageBlockVM: ObservableObject, Fillable {
     @Published var tiles: [LanguageTileVM]
     
     init(tiles: [LanguageTileVM] = []) {

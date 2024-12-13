@@ -7,7 +7,7 @@
 import SwiftUI
 
 
-class WorkBlockVM: ObservableObject {
+class WorkBlockVM: ObservableObject, Fillable {
     @Published var tiles: [WorkTileVM]
     
     init(tiles: [WorkTileVM] = []) {

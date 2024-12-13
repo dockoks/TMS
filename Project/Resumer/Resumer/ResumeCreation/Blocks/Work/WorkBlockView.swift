@@ -12,10 +12,9 @@ struct WorkBlockView: View {
     
     var body: some View {
         ScrollView {
-            VStack(spacing: 4) {
+            VStack(spacing: 8) {
                 ForEach($viewModel.tiles) { $tile in
                     WorkTileView(tile: $tile)
-                        .padding(.horizontal, 12)
                         .swipeActions(
                             edge: .trailing,
                             allowsFullSwipe: true
@@ -30,13 +29,15 @@ struct WorkBlockView: View {
                         }
                 }
             }
+            .padding(.horizontal, 16)
+            
             RButton(
                 style: .secondary,
                 title: "Add Period"
             ) {
                 viewModel.addTile()
             }
-            .padding(.horizontal, 24)
+            .padding(.horizontal, 16)
             .padding(.vertical, 8)
             .dismissKeyboardOnTap()
         }

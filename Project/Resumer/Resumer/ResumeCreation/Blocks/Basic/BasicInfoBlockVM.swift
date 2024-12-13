@@ -7,11 +7,23 @@
 
 import SwiftUI
 
-class BasicInfoBlockVM: ObservableObject {
+protocol Fillable {
+    var isFilled: Bool { get }
+}
+
+class BasicInfoBlockVM: ObservableObject, Fillable {
     @Published var avatar: Image?
-    @Published var name: String
-    @Published var surname: String
-    @Published var jobTitle: String
+    @Published var name: String {
+        didSet { updateIsFilled() }
+    }
+    @Published var surname: String {
+        didSet { updateIsFilled() }
+    }
+    @Published var jobTitle: String {
+        didSet { updateIsFilled() }
+    }
+    
+    @Published private(set) var isFilled: Bool = false // `private(set)` ensures only this class can modify `isFilled`
     
     init(
         avatar: Image? = nil,
@@ -23,9 +35,10 @@ class BasicInfoBlockVM: ObservableObject {
         self.name = name
         self.surname = surname
         self.jobTitle = jobTitle
+        updateIsFilled() // Initialize `isFilled` based on default values
     }
     
-    var isFilled: Bool {
-        return !(name.isEmpty || surname.isEmpty || jobTitle.isEmpty)
+    private func updateIsFilled() {
+        isFilled = !(name.isEmpty || surname.isEmpty || jobTitle.isEmpty)
     }
 }

@@ -9,114 +9,70 @@ import SwiftUI
 
 
 struct ResumeCreationView: View {
-    @StateObject private var resumeVM = ResumeCreationVM(
-        basicInfo: .init(
-            avatar: Image(systemName: "person.circle"),
-            name: "John",
-            surname: "Doe",
-            jobTitle: "iOS Developer"
-        ),
-        contact: .init(
-            email: "johndoe@example.com",
-            phone: "+1 (555) 123-4567",
-            address: "123 Main Street, Springfield, USA",
-            additionalLinks: [
-                .init(key: .linkedIn, value: "johndoe"),
-                .init(key: .github, value: "johndoe-dev")
-            ]
-        ),
-        education: .init(
-            tiles: [
-                .init(
-                    affiliation: "Springfield University",
-                    specialisation: "Computer Science",
-                    degree: .bachelors,
-                    startDate: Date(timeIntervalSinceNow: -4 * 365 * 24 * 60 * 60), // 4 years ago
-                    endDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
-                    isPresent: false,
-                    description: "Learned programming, data structures, and algorithms."
-                )
-            ]
-        ),
-        work: .init(
-            tiles: [
-                .init(
-                    company: "TechCorp",
-                    position: "Junior iOS Developer",
-                    startDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
-                    endDate: Date(),
-                    isPresent: true,
-                    description: "Developed and maintained iOS applications for e-commerce clients."
-                )
-            ]
-        ),
-        skill: .init(
-            skills: ["Swift", "SwiftUI", "Combine", "Core Data"]
-        ),
-        language: .init(
-            tiles: [
-                .init(
-                    name: "English",
-                    chosenProficiency: 4,
-                    proficiency: .c2
-                ),
-                .init(
-                    name: "Spanish",
-                    chosenProficiency: 3,
-                    proficiency: .b2
-                )
-            ]
-        )
-    )
+    @ObservedObject private var resumeVM: ResumeCreationVM
     @Environment(\.dismiss) private var dismiss
     @StateObject private var keyboardResponder = KeyboardResponder()
     
+    init(resumeVM: ResumeCreationVM) {
+        self.resumeVM = resumeVM
+    }
+    
     var body: some View {
         ZStack(alignment: .bottom) {
-            VStack {
-                ProgressIndicator(currentPage: $resumeVM.currentPage)
+            VStack(spacing: 12) {
+                RProgressIndicatorView(currentPage: $resumeVM.currentPage, segments: Block.allCases)
                 
                 TabView(selection: $resumeVM.currentPage) {
                     BasicInfoView(basicInfo: resumeVM.basicInfoVM)
                         .tag(0)
-                    ContactInfoView(viewModel: resumeVM.contactVM)
+                    BasicInfoView(basicInfo: resumeVM.basicInfoVM)
                         .tag(1)
-                    EducationBlockView(viewModel: resumeVM.educationVM)
+                    ContactInfoView(viewModel: resumeVM.contactVM)
                         .tag(2)
-                    WorkBlockView(viewModel: resumeVM.workVM)
+                    EducationBlockView(viewModel: resumeVM.educationVM)
                         .tag(3)
-                    SkillBlockView(viewModel: resumeVM.skillVM)
+                    WorkBlockView(viewModel: resumeVM.workVM)
                         .tag(4)
-                    LanguageBlockView(viewModel: resumeVM.languageVM)
+                    SkillBlockView(viewModel: resumeVM.skillVM)
                         .tag(5)
-                    RenderedView(resumeVM: resumeVM)
+                    LanguageBlockView(viewModel: resumeVM.languageVM)
                         .tag(6)
+                    RenderedView(resumeVM: resumeVM)
+                        .tag(7)
                 }
                 .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
             }
             
             HStack {
-                RIconButton(style: .secondary) {
-                    resumeVM.navigateToPreviousTab()
+                RIconButton(icon: .chevronL, style: .secondary) {
+                    withAnimation(.easeInOut) {
+                        resumeVM.navigateToPreviousTab()
+                    }
                 }
                 Spacer()
-                RIconButton(isEnabled: .constant(resumeVM.isCurrentTabFilled)) {
-                    resumeVM.navigateToNextTab()
+                RIconButton(icon: .chevronR, isEnabled: .constant(resumeVM.isCurrentTabFilled)) {
+                    withAnimation(.easeInOut) {
+                        resumeVM.navigateToNextTab()
+                    }
                 }
             }
-            .padding(16)
-            .padding(.bottom, keyboardResponder.keyboardHeight > 0 ? keyboardResponder.keyboardHeight - 16 : 0)
+            .padding(.horizontal, 16)
+            .padding(.bottom, keyboardResponder.keyboardHeight > 0 ? 16 : 0)
         }
         .onChange(of: resumeVM.isDismissed) {
             if resumeVM.isDismissed {
                 dismiss()
             }
         }
+        .onChange(of: resumeVM.currentPage) {
+            UIApplication.shared.sendAction(
+                #selector(UIResponder.resignFirstResponder),
+                to: nil,
+                from: nil,
+                for: nil
+            )
+        }
         .animation(.easeInOut, value: keyboardResponder.keyboardHeight)
         .navigationBarBackButtonHidden(true)
     }
-}
-
-#Preview {
-    ResumeCreationView()
 }

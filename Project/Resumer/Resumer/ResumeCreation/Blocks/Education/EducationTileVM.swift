@@ -22,7 +22,7 @@ class EducationTileVM: ObservableObject, Identifiable {
     init(
         affiliation: String = "",
         specialisation: String = "",
-        degree: Degree = .bachelors,
+        degree: Degree = .doctoral,
         startDate: Date = Date(),
         endDate: Date = Date(),
         isPresent: Bool = false,

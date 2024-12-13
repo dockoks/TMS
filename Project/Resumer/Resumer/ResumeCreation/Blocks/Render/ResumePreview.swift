@@ -104,7 +104,7 @@ struct ResumePreview: View {
                     .init(
                         affiliation: "Springfield University",
                         specialisation: "Computer Science",
-                        degree: .bachelors,
+                        degree: .postgraduate,
                         startDate: Date(timeIntervalSinceNow: -4 * 365 * 24 * 60 * 60), // 4 years ago
                         endDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
                         isPresent: false,

@@ -25,12 +25,22 @@ struct ContactInfoBlock: Codable {
     let additionalLinks: [Link]
 }
 
-enum LinkDomain: String, Codable {
+enum LinkDomain: String, Codable, CaseIterable {
     case github
     case linkedIn
     case twitter
     case instagram
     case website
+    
+    var icon: RIcon {
+        return switch self {
+        case .github: .link
+        case .linkedIn: .link
+        case .twitter: .link
+        case .instagram: .link
+        case .website: .link
+        }
+    }
 }
 
 struct Link: Codable, Identifiable {
@@ -50,10 +60,9 @@ struct Link: Codable, Identifiable {
 }
 
 enum Degree: String, Identifiable, Codable, CaseIterable {
-    case under = "Under"
-    case bachelors = "Bachelors"
-    case masters = "Masters"
-    case phd = "Phd"
+    case undergraduate = "UG"
+    case postgraduate = "PG"
+    case doctoral = "DOC"
     case other = "Other"
     
     var id: String { rawValue.capitalized }

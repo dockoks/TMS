@@ -12,20 +12,22 @@ struct WorkTileView: View {
     @State private var textEditorHeight: CGFloat = 80
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            RTextField(
-                text: $tile.company,
-                symbolLimit: 20,
-                placeholder: "Company"
-            )
-            
-            RTextField(
-                text: $tile.position,
-                symbolLimit: 20,
-                placeholder: "Position"
-            )
-            
-            VStack {
+        VStack(alignment: .leading, spacing: 8) {
+            VStack(spacing: 0) {
+                RTextField(
+                    text: $tile.company,
+                    symbolLimit: 20,
+                    placeholder: "Company"
+                )
+                
+                RTextField(
+                    text: $tile.position,
+                    symbolLimit: 20,
+                    placeholder: "Position"
+                )
+            }
+            Divider()
+            VStack(spacing: 8) {
                 DatePicker("Start Date", selection: $tile.startDate, displayedComponents: .date)
                     .typographyStyle(.body)
                     .tint(.black)
@@ -34,24 +36,28 @@ struct WorkTileView: View {
                         .typographyStyle(.body)
                         .tint(.black)
                 }
-            }
-            
-            Toggle("Currently working", isOn: $tile.isPresent)
-                .typographyStyle(.body)
-                .tint(.black)
-                .padding(.vertical, 16)
-                .onChange(of: tile.isPresent) {
-                    if tile.isPresent {
-                        tile.endDate = Date()
-                    }
+                HStack {
+                    Text("Currently Working")
+                        .typographyStyle(.body)
+                        .tint(.black)
+                    Spacer()
+                    RSwitch(isOn: $tile.isPresent)
+                        .onChange(of: tile.isPresent) {
+                            if tile.isPresent {
+                                tile.endDate = Date()
+                            }
+                        }
                 }
+            }
+            .padding(.vertical, 8)
+            Divider()
             
             RTextEditorDynamicView(text: $tile.description)
         }
         .padding(12)
         .background {
-            RoundedRectangle(cornerRadius: 28)
-                .fill(ColorPalette.Bg.layerThree)
+            RoundedRectangle(cornerRadius: 16)
+                .fill(ColorPalette.Bg.accent)
         }
         .dismissKeyboardOnTap()
     }
