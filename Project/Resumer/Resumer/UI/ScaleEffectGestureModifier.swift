@@ -1,11 +1,5 @@
-//
-//  ScaleEffectGestureModifier.swift
-//  Resumer
-//
-//  Created by Danila Kokin on 12/2/24.
-//
-
 import SwiftUI
+
 
 extension View {
     func scaleEffectOnPressGesture(scale: CGFloat = 0.98) -> some View {

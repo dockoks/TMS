@@ -38,7 +38,7 @@ struct RButton: View {
             }
         }) {
             ZStack {
-                ContinuousCornerShape(cornerRadius: cornerRadius)
+                RoundedRectangle(cornerRadius: cornerRadius, style: .continuous)
                     .fill(isEnabled ? bgColor : bgColorDisabled)
                 HStack {
                     if let icon = icon {

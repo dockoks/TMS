@@ -1,6 +1,7 @@
 import SwiftUI
 import Combine
 
+
 struct RTextField: View {
     @Binding var text: String
     @Binding var isValid: Bool

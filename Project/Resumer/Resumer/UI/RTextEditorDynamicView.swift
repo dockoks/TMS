@@ -1,10 +1,9 @@
 import SwiftUI
 
+
 struct RTextEditorDynamicView: View {
-    
     @Binding private var text: String?
-    
-    let placeholder = "Enter Text Here"
+    let placeholder: String = ""
     
     init(
         text: Binding<String?>

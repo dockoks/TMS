@@ -47,7 +47,7 @@ struct Link: Codable, Identifiable {
     var id: UUID
     var key: LinkDomain
     var value: String
-
+    
     init(
         id: UUID = UUID(),
         key: LinkDomain,
@@ -56,6 +56,14 @@ struct Link: Codable, Identifiable {
         self.id = id
         self.key = key
         self.value = value
+    }
+    
+    func toDictionary() -> [String: Any] {
+        return [
+            "id": id.uuidString,
+            "key": key.rawValue,
+            "value": value
+        ]
     }
 }
 

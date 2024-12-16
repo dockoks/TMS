@@ -1,13 +1,6 @@
-//
-//  PDFGenerator.swift
-//  Resumer
-//
-//  Created by Danila Kokin on 12/5/24.
-//
-
-
 import SwiftUI
 import PDFKit
+
 
 struct PDFGenerator {
     static func createPDF(from view: some View, fileName: String = "ResumePreview.pdf") -> URL? {
