@@ -2,6 +2,21 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>Google Sign In</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.899681469947-srqaiond730sn47nop08h93fjsfir1vi</string>
+			</array>
+		</dict>
+	</array>
+	<key>GIDClientID</key>
+	<string>899681469947-srqaiond730sn47nop08h93fjsfir1vi.apps.googleusercontent.com</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Manrope-Regular.ttf</string>

@@ -1,9 +1,10 @@
 import SwiftUI
 import Combine
 
+
 struct RTextField: View {
     @Binding var text: String
-    var isValid: Bool
+    @Binding var isValid: Bool
     let symbolLimit: Int
     let placeholder: String
     let autoCorrection: Bool
@@ -13,14 +14,14 @@ struct RTextField: View {
     
     init(
         text: Binding<String>,
-        isValid: Bool = true,
+        isValid: Binding<Bool> = .constant(true),
         symbolLimit: Int,
         placeholder: String = "",
         autoCorrection: Bool = false,
         keyboardType: UIKeyboardType = .default
     ) {
         self._text = text
-        self.isValid = isValid
+        self._isValid = isValid
         self.symbolLimit = symbolLimit
         self.placeholder = placeholder
         self.autoCorrection = autoCorrection
@@ -28,42 +29,34 @@ struct RTextField: View {
     }
     
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            TextField(placeholder, text: $text)
-                .focused($isFocused)
-                .onReceive(Just(text)) { newValue in
-                    if newValue.count > symbolLimit {
-                        text = String(newValue.prefix(symbolLimit))
-                    }
+        TextField(placeholder, text: $text)
+            .focused($isFocused)
+            .onChange(of: text) { oldValue, newValue in
+                if newValue.count < symbolLimit {
+                    text = newValue
                 }
-                .keyboardType(keyboardType)
-                .tint(.black)
-                .textFieldStyle(.plain)
-                .autocorrectionDisabled(!autoCorrection)
-                .foregroundColor(isFocused ? (isValid ? .black : .red) : .black)
-                .typographyStyle(.body)
-                .padding(.vertical, 4)
-            Capsule()
-                .frame(height: 2)
-                .frame(maxWidth: isFocused ? .infinity : 0)
-                .foregroundStyle(isFocused ? (isValid ? Color.black.opacity(0.16) : .red) : Color.clear)
-                .animation(.easeInOut(duration: 0.3), value: isFocused)
-        }
-        .frame(maxHeight: 36)
-        .overlay(alignment: .topLeading) {
-            if isFocused {
-                Text(placeholder)
-                    .typographyStyle(.caption)
-                    .foregroundStyle(ColorPalette.Text.tertiary)
             }
-        }
+            .keyboardType(keyboardType)
+            .tint(.black)
+            .textFieldStyle(.plain)
+            .autocorrectionDisabled(!autoCorrection)
+            .typographyStyle(.body)
+            .padding(.vertical, 4)
+            .background(alignment: .bottomLeading) {
+                Capsule()
+                    .frame(width: !isFocused ? 0 : nil, height: 0.5)
+                    .opacity(isFocused ? 1 : 0)
+                    .foregroundStyle(isFocused ? ColorPalette.Outline.heavy : .clear)
+                    .animation(.easeInOut(duration: 0.3), value: isFocused)
+            }
+            .frame(maxHeight: 36)
     }
 }
 
 #Preview {
     RTextField(
         text: .constant(""),
-        isValid: true,
+        isValid: .constant(true),
         symbolLimit: 30,
         placeholder: "Hello",
         keyboardType: .default

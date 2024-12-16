@@ -1,13 +1,6 @@
-//
-//  PDFKitView.swift
-//  Resumer
-//
-//  Created by Danila Kokin on 12/5/24.
-//
-
-
 import SwiftUI
 import PDFKit
+
 
 struct PDFKitView: UIViewRepresentable {
     let url: URL

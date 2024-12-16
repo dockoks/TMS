@@ -25,19 +25,29 @@ struct ContactInfoBlock: Codable {
     let additionalLinks: [Link]
 }
 
-enum LinkDomain: String, Codable {
+enum LinkDomain: String, Codable, CaseIterable {
     case github
     case linkedIn
     case twitter
     case instagram
     case website
+    
+    var icon: RIcon {
+        return switch self {
+        case .github: .link
+        case .linkedIn: .link
+        case .twitter: .link
+        case .instagram: .link
+        case .website: .link
+        }
+    }
 }
 
 struct Link: Codable, Identifiable {
     var id: UUID
     var key: LinkDomain
     var value: String
-
+    
     init(
         id: UUID = UUID(),
         key: LinkDomain,
@@ -47,13 +57,20 @@ struct Link: Codable, Identifiable {
         self.key = key
         self.value = value
     }
+    
+    func toDictionary() -> [String: Any] {
+        return [
+            "id": id.uuidString,
+            "key": key.rawValue,
+            "value": value
+        ]
+    }
 }
 
 enum Degree: String, Identifiable, Codable, CaseIterable {
-    case under = "Under"
-    case bachelors = "Bachelors"
-    case masters = "Masters"
-    case phd = "Phd"
+    case undergraduate = "UG"
+    case postgraduate = "PG"
+    case doctoral = "DOC"
     case other = "Other"
     
     var id: String { rawValue.capitalized }

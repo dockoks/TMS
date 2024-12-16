@@ -1,10 +1,5 @@
-//
-//  FlowLayout.swift
-//  Resumer
-//
-//  Created by Danila Kokin on 12/4/24.
-//
 import SwiftUI
+
 
 struct FlowLayout<Data: RandomAccessCollection, Content: View>: View where Data.Element: Hashable {
     let items: Data
@@ -46,7 +41,7 @@ struct FlowLayout<Data: RandomAccessCollection, Content: View>: View where Data.
                         }
                         let result = width
                         if index == items.count - 1 {
-                            width = 0 // Reset width for the last item
+                            width = 0
                         } else {
                             width -= dimension.width
                         }
@@ -55,7 +50,7 @@ struct FlowLayout<Data: RandomAccessCollection, Content: View>: View where Data.
                     .alignmentGuide(.top) { _ in
                         let result = height
                         if index == items.count - 1 {
-                            height = 0 // Reset height for the last item
+                            height = 0
                         }
                         return result
                     }
