@@ -2,11 +2,11 @@ import SwiftUI
 
 
 struct RTextEditorDynamicView: View {
-    @Binding private var text: String?
+    @Binding private var text: String
     let placeholder: String = ""
     
     init(
-        text: Binding<String?>
+        text: Binding<String>
     ) {
         self._text = text
     }
@@ -15,12 +15,12 @@ struct RTextEditorDynamicView: View {
         VStack {
             ScrollView {
                 ZStack(alignment: .topLeading) {
-                    Text(text ?? placeholder)
-                        .opacity(text == nil ? 1 : 0)
+                    Text(text.isEmpty ? placeholder : text)
+                        .opacity(text.isEmpty ? 1 : 0)
                         .foregroundStyle(.gray)
                         .typographyStyle(.footnote)
                         .padding(.vertical, 8)
-                    TextEditor(text: Binding($text, replacingNilWith: ""))
+                    TextEditor(text: $text)
                         .scrollContentBackground(.hidden)
                         .scrollIndicators(.hidden)
                         .typographyStyle(.footnote)

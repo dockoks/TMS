@@ -1,9 +1,4 @@
-//
-//  RSegmentView.swift
-//  Resumer
-//
-//  Created by Danila Kokin on 12/16/24.
-//
+import SwiftUI
 
 
 struct RSegmentView: View {

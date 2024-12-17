@@ -16,11 +16,11 @@ struct ResumeCreationView: View {
                 RProgressIndicatorView(currentPage: $resumeVM.currentPage, segments: Block.allCases)
                 
                 TabView(selection: $resumeVM.currentPage) {
-                    BasicInfoView(basicInfo: resumeVM.basicInfoVM)
+                    BasicInfoBlockView(viewModel: resumeVM.basicInfoVM)
                         .tag(0)
-                    BasicInfoView(basicInfo: resumeVM.basicInfoVM)
+                    BasicInfoBlockView(viewModel: resumeVM.basicInfoVM)
                         .tag(1)
-                    ContactInfoView(viewModel: resumeVM.contactVM)
+                    ContactBlockView(viewModel: resumeVM.contactVM)
                         .tag(2)
                     EducationBlockView(viewModel: resumeVM.educationVM)
                         .tag(3)

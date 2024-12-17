@@ -33,8 +33,8 @@ struct ResumePreview: View {
                 ForEach(resumeVM.educationVM.tiles) { tile in
                     Text("\(tile.affiliation) - \(tile.degree.rawValue.capitalized)").typographyStyle(.footnote)
                     Text(tile.specialisation).typographyStyle(.footnote)
-                    if let description = tile.description {
-                        Text(description).typographyStyle(.caption)
+                    if !tile.description.isEmpty {
+                        Text(tile.description).typographyStyle(.caption)
                     }
                 }
             }
@@ -43,8 +43,8 @@ struct ResumePreview: View {
                 Text("Work Experience").typographyStyle(.footnote)
                 ForEach(resumeVM.workVM.tiles) { tile in
                     Text("\(tile.company) - \(tile.position)").typographyStyle(.footnote)
-                    if let description = tile.description {
-                        Text(description).typographyStyle(.caption)
+                    if !tile.description.isEmpty {
+                        Text(tile.description).typographyStyle(.caption)
                     }
                 }
             }
@@ -80,66 +80,67 @@ struct ResumePreview: View {
     }
 }
 
-#Preview {
-    ResumePreview(
-        resumeVM: .init(
-            basicInfo: .init(
-                avatar: Image(systemName: "person.circle"),
-                name: "John",
-                surname: "Doe",
-                jobTitle: "iOS Developer"
-            ),
-            contact: .init(
-                email: "johndoe@example.com",
-                phone: "+1 (555) 123-4567",
-                address: "123 Main Street, Springfield, USA",
-                additionalLinks: [
-                    .init(key: .linkedIn, value: "johndoe"),
-                    .init(key: .github, value: "johndoe-dev")
-                ]
-            ),
-            education: .init(
-                tiles: [
-                    .init(
-                        affiliation: "Springfield University",
-                        specialisation: "Computer Science",
-                        degree: .postgraduate,
-                        startDate: Date(timeIntervalSinceNow: -4 * 365 * 24 * 60 * 60), // 4 years ago
-                        endDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
-                        isPresent: false,
-                        description: "Learned programming, data structures, and algorithms."
-                    )
-                ]
-            ),
-            work: .init(
-                tiles: [
-                    .init(
-                        company: "TechCorp",
-                        position: "Junior iOS Developer",
-                        startDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
-                        endDate: Date(),
-                        isPresent: true,
-                        description: "Developed and maintained iOS applications for e-commerce clients."
-                    )
-                ]
-            ),
-            skill: .init(
-                skills: ["Swift", "SwiftUI", "Combine", "Core Data"]
-            ),
-            language: .init(
-                tiles: [
-                    .init(
-                        name: "English",
-                        chosenProficiency: 4,
-                        proficiency: .c2
-                    ),
-                    .init(
-                        name: "Spanish",
-                        chosenProficiency: 3,
-                        proficiency: .b2
-                    )
-                ]
-            )
-        )
-    )
-}
+//#Preview {
+//    ResumePreview(
+//        resumeVM: .init(
+//            userID: UUID().uuidString,
+//            basicInfo: .init(
+//                avatar: Image(systemName: "person.circle"),
+//                name: "John",
+//                surname: "Doe",
+//                jobTitle: "iOS Developer"
+//            ),
+//            contact: .init(
+//                email: "johndoe@example.com",
+//                phone: "+1 (555) 123-4567",
+//                address: "123 Main Street, Springfield, USA",
+//                additionalLinks: [
+//                    .init(key: .linkedIn, value: "johndoe"),
+//                    .init(key: .github, value: "johndoe-dev")
+//                ]
+//            ),
+//            education: .init(
+//                tiles: [
+//                    .init(
+//                        affiliation: "Springfield University",
+//                        specialisation: "Computer Science",
+//                        degree: .postgraduate,
+//                        startDate: Date(timeIntervalSinceNow: -4 * 365 * 24 * 60 * 60), // 4 years ago
+//                        endDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
+//                        isPresent: false,
+//                        description: "Learned programming, data structures, and algorithms."
+//                    )
+//                ]
+//            ),
+//            work: .init(
+//                tiles: [
+//                    .init(
+//                        company: "TechCorp",
+//                        position: "Junior iOS Developer",
+//                        startDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
+//                        endDate: Date(),
+//                        isPresent: true,
+//                        description: "Developed and maintained iOS applications for e-commerce clients."
+//                    )
+//                ]
+//            ),
+//            skill: .init(
+//                skills: ["Swift", "SwiftUI", "Combine", "Core Data"]
+//            ),
+//            language: .init(
+//                tiles: [
+//                    .init(
+//                        name: "English",
+//                        chosenProficiency: 4,
+//                        proficiency: .c2
+//                    ),
+//                    .init(
+//                        name: "Spanish",
+//                        chosenProficiency: 3,
+//                        proficiency: .b2
+//                    )
+//                ]
+//            )
+//        )
+//    )
+//}

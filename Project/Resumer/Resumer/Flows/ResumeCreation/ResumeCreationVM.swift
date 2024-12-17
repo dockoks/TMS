@@ -2,35 +2,39 @@ import SwiftUI
 import FirebaseFirestore
 import Combine
 
-
 final class ResumeCreationVM: ObservableObject, Identifiable {
-    var userID: UUID = UUID()
-    var resumeID: UUID = UUID()
+    var userID: String
+    @DocumentID var resumeID: String?
     @Published var currentPage: Int = 0
     @Published var isDismissed: Bool = false
-    @Published var pdfURL: URL?
-    
+    let createdAt: Date
+    var updatedAt: Date
+
     @Published var basicInfoVM: BasicInfoBlockVM
-    @Published var contactVM: ContactInfoBlockVM
+    @Published var contactVM: ContactBlockVM
     @Published var educationVM: EducationBlockVM
     @Published var workVM: WorkBlockVM
     @Published var skillVM: SkillBlockVM
     @Published var languageVM: LanguageBlockVM
-    
+
     private var subscriptions = Set<AnyCancellable>()
-    
+
     init(
-        userID: UUID = UUID(),
-        resumeID: UUID = UUID(),
+        userID: String,
+        resumeID: String? = nil,
+        createdAt: Date = Date(),
+        updatedAt: Date = Date(),
         basicInfo: BasicInfoBlockVM = BasicInfoBlockVM(),
-        contact: ContactInfoBlockVM = ContactInfoBlockVM(),
+        contact: ContactBlockVM = ContactBlockVM(),
         education: EducationBlockVM = EducationBlockVM(tiles: [.init()]),
         work: WorkBlockVM = WorkBlockVM(tiles: [.init()]),
-        skill: SkillBlockVM = SkillBlockVM(),
+        skill: SkillBlockVM = SkillBlockVM(skills: []),
         language: LanguageBlockVM = LanguageBlockVM(tiles: [.init()])
     ) {
         self.userID = userID
         self.resumeID = resumeID
+        self.createdAt = createdAt
+        self.updatedAt = updatedAt
         
         self.basicInfoVM = basicInfo
         self.contactVM = contact
@@ -38,10 +42,10 @@ final class ResumeCreationVM: ObservableObject, Identifiable {
         self.workVM = work
         self.skillVM = skill
         self.languageVM = language
-        
+
         setupCurrentPageListener()
     }
-    
+
     var isCurrentTabFilled: Bool {
         switch currentPage {
         case 0: return basicInfoVM.isFilled
@@ -53,7 +57,7 @@ final class ResumeCreationVM: ObservableObject, Identifiable {
         default: return false
         }
     }
-    
+
     func navigateToPreviousTab() {
         if currentPage == 0 {
             isDismissed = true
@@ -61,7 +65,7 @@ final class ResumeCreationVM: ObservableObject, Identifiable {
             currentPage -= 1
         }
     }
-    
+
     func navigateToNextTab() {
         if currentPage < 6 {
             currentPage += 1
@@ -71,102 +75,38 @@ final class ResumeCreationVM: ObservableObject, Identifiable {
     private func setupCurrentPageListener() {
         $currentPage
             .removeDuplicates()
-            .sink { [weak self] page in
-                print("Current page changed to: \(page)")
-                await uploadResume(forPage: page)
+            .sink { [weak self] _ in
+                Task {
+                    await self?.saveResume()
+                }
             }
             .store(in: &subscriptions)
     }
-    
-    private func uploadResume(forPage page: Int) async {
-        var resumeData: [String: Any] = [:]
-        
-        switch page {
-        case 0: resumeData["basic_info"] = basicInfoVM.toDictionary()
-        case 1: resumeData["basic_info"] = basicInfoVM.toDictionary()
-        case 2: resumeData["contact"] = contactVM.toDictionary()
-        case 3: resumeData["education"] = educationVM.toDictionary()
-        case 4: resumeData["work"] = workVM.toDictionary()
-        case 5: resumeData["skill"] = skillVM.toDictionary()
-        case 6: resumeData["language"] = languageVM.toDictionary()
-        default:
-            print("Nothing to update")
-        }
-        resumeData["updatedAt"] = Timestamp(date: Date())
-        
+
+    // MARK: - Save Resume to Firestore
+    func saveResume() async {
+        let db = Firestore.firestore()
+        let resumeModel = toModel()
+
         do {
-            try await FirebaseStorageManager.shared.uploadData(
-                for: userID.uuidString,
-                resumeID: resumeID.uuidString,
-                data: resumeData)
+            let data = try Firestore.Encoder().encode(resumeModel)
+            let documentRef = db.collection("users")
+                .document(userID)
+                .collection("resumes")
+                .document(resumeID ?? UUID().uuidString)
+
+            try await documentRef.setData(data, merge: true)
+
+            self.resumeID = documentRef.documentID
+            self.updatedAt = Date()
+            print("Resume saved successfully!")
         } catch {
-            
+            print("Error saving resume: \(error.localizedDescription)")
         }
     }
-}
 
-extension ResumeCreationVM {
-    static func mock(userID: UUID) -> ResumeCreationVM {
-        return ResumeCreationVM(
-            userID: userID,
-            resumeID: UUID(),
-            basicInfo: .init(
-                avatar: nil,
-                name: "John",
-                surname: "Doe",
-                jobTitle: "iOS Developer"
-            ),
-            contact: .init(
-                email: "johndoe@example.com",
-                phone: "+346581234567",
-                address: "123 Main Street, Springfield, USA",
-                additionalLinks: [
-                    .init(key: .linkedIn, value: "johndoe"),
-                    .init(key: .github, value: "johndoe-dev")
-                ]
-            ),
-            education: .init(
-                tiles: [
-                    .init(
-                        affiliation: "Springfield University",
-                        specialisation: "Computer Science",
-                        degree: .postgraduate,
-                        startDate: Date(timeIntervalSinceNow: -4 * 365 * 24 * 60 * 60), // 4 years ago
-                        endDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
-                        isPresent: false,
-                        description: "Learned programming, data structures, and algorithms."
-                    )
-                ]
-            ),
-            work: .init(
-                tiles: [
-                    .init(
-                        company: "TechCorp",
-                        position: "Junior iOS Developer",
-                        startDate: Date(timeIntervalSinceNow: -1 * 365 * 24 * 60 * 60), // 1 year ago
-                        endDate: Date(),
-                        isPresent: true,
-                        description: "Developed and maintained iOS applications for e-commerce clients."
-                    )
-                ]
-            ),
-            skill: .init(
-                skills: ["Swift", "SwiftUI", "Combine", "Core Data"]
-            ),
-            language: .init(
-                tiles: [
-                    .init(
-                        name: "English",
-                        chosenProficiency: 4,
-                        proficiency: .c2
-                    ),
-                    .init(
-                        name: "Spanish",
-                        chosenProficiency: 3,
-                        proficiency: .b2
-                    )
-                ]
-            )
-        )
+    // MARK: - Convert ViewModel to ResumeModel
+    func toModel() -> ResumeModel {
+        return ResumeModel(from: self)
     }
 }

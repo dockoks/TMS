@@ -8,6 +8,10 @@ final class SkillBlockVM: ObservableObject, Fillable {
         self.skills = skills
     }
     
+    init(from model: SkillBlockModel) {
+        self.skills = model.skills
+    }
+    
     func addSkill(_ skill: String) {
         guard !skills.contains(skill) else { return }
         skills.append(skill)
@@ -23,8 +27,8 @@ final class SkillBlockVM: ObservableObject, Fillable {
     }
 }
 
-extension SkillBlockVM {
-    func toDictionary() -> [String] {
-        return skills
+extension SkillBlockVM: Uploadable{
+    func toModel() -> SkillBlockModel {
+        return SkillBlockModel(from: self)
     }
 }

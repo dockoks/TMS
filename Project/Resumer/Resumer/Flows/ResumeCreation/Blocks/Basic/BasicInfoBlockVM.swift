@@ -5,31 +5,34 @@ protocol Fillable {
     var isFilled: Bool { get }
 }
 
-class BasicInfoBlockVM: ObservableObject, Fillable {
+protocol Uploadable {
+    associatedtype UploadableModel: Codable
+    func toModel() -> UploadableModel
+//    func toDictionary() -> [String: Any]
+}
+
+class BasicInfoBlockVM: ObservableObject, Fillable, Uploadable {
     @Published var avatar: Image?
-    @Published var name: String {
-        didSet { updateIsFilled() }
-    }
-    @Published var surname: String {
-        didSet { updateIsFilled() }
-    }
-    @Published var jobTitle: String {
-        didSet { updateIsFilled() }
-    }
+    @Published var name: String
+    @Published var surname: String
+    @Published var jobTitle: String
     
-    @Published private(set) var isFilled: Bool = false // `private(set)` ensures only this class can modify `isFilled`
+    @Published private(set) var isFilled: Bool = false
+    
+    init () {
+        self.name = ""
+        self.surname = ""
+        self.jobTitle = ""
+    }
     
     init(
-        avatar: Image? = nil,
-        name: String = "",
-        surname: String = "",
-        jobTitle: String = ""
+        from model: BasicInfoModel
     ) {
-        self.avatar = avatar
-        self.name = name
-        self.surname = surname
-        self.jobTitle = jobTitle
-        updateIsFilled() // Initialize `isFilled` based on default values
+        self.avatar = model.avatar?.toImage()
+        self.name = model.name
+        self.surname = model.surname
+        self.jobTitle = model.jobTitle
+        updateIsFilled()
     }
     
     private func updateIsFilled() {
@@ -42,17 +45,11 @@ class BasicInfoBlockVM: ObservableObject, Fillable {
             "surname": surname,
             "jobTitle": jobTitle
         ]
-        
-        // Convert avatar to Base64 string if available
-        guard let avatar = avatar else { return dictionary }
-        
-        let uiImage = ImageToUIImageConverter(image: avatar).asUIImage()
-        
-        guard let imageData = uiImage.jpegData(compressionQuality: 0.8) else { return dictionary }
-        
-        let base64String = imageData.base64EncodedString()
-        dictionary["avatar"] = base64String
-        
         return dictionary
     }
+    
+    func toModel() -> BasicInfoModel {
+        return BasicInfoModel(from: self)
+    }
 }
+
