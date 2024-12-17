@@ -1,15 +1,15 @@
 import SwiftUI
 
 
-struct BasicInfoView: View {
-    @ObservedObject var basicInfo: BasicInfoBlockVM = .init()
+struct BasicInfoBlockView: View {
+    @ObservedObject var viewModel: BasicInfoBlockVM = .init()
     
     var body: some View {
         VStack(spacing:40) {
             Button (action: {
                 print("select photo")
             }) {
-                if let avatar = basicInfo.avatar {
+                if let avatar = viewModel.avatar {
                     avatar
                         .resizable()
                         .frame(width: 100, height: 100)
@@ -31,17 +31,17 @@ struct BasicInfoView: View {
             .buttonStyle(NoneButtonStyle())
             VStack(spacing: 8) {
                 RTextField(
-                    text: $basicInfo.name,
+                    text: $viewModel.name,
                     symbolLimit: 30,
                     placeholder: "First Name"
                 )
                 RTextField(
-                    text: $basicInfo.surname,
+                    text: $viewModel.surname,
                     symbolLimit: 30,
                     placeholder: "Last Name"
                 )
                 RTextField(
-                    text: $basicInfo.jobTitle,
+                    text: $viewModel.jobTitle,
                     symbolLimit: 30,
                     placeholder: "Job Title"
                 )
@@ -61,5 +61,5 @@ struct BasicInfoView: View {
 }
 
 #Preview {
-    BasicInfoView()
+    BasicInfoBlockView()
 }

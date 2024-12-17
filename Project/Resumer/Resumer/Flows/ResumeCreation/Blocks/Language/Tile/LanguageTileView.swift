@@ -13,7 +13,7 @@ struct LanguageTileView: View {
             )
             
             RSegmentedControlView(
-                currentTab: $tile.chosenProficiency,
+                currentTab: $tile.proficiencySelected,
                 tabBarOptions: ProfficiencyLevel.allCases.map {
                     $0.rawValue.capitalized
                 }

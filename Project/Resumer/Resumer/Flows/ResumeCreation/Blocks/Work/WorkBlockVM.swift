@@ -8,11 +8,15 @@ final class WorkBlockVM: ObservableObject, Fillable {
         self.tiles = tiles
     }
     
-    func addTile() {
-        tiles.append(WorkTileVM())
+    init(from model: WorkBlockModel) {
+        self.tiles = model.tiles.map { WorkTileVM(from: $0) }
     }
     
-    func removeTile(id: UUID) {
+    func addTile() {
+//        tiles.append(WorkTileVM())
+    }
+    
+    func removeTile(id: String) {
         tiles.removeAll { $0.id == id }
     }
     
@@ -21,10 +25,8 @@ final class WorkBlockVM: ObservableObject, Fillable {
     }
 }
 
-extension WorkBlockVM {
-    func toDictionary() -> [String: Any] {
-        return [
-            "tiles": tiles.map { $0.toDictionary() }
-        ]
+extension WorkBlockVM: Uploadable {
+    func toModel() -> WorkBlockModel {
+        return WorkBlockModel(from: self)
     }
 }

@@ -1,18 +1,22 @@
 import SwiftUI
 
 
-class LanguageBlockVM: ObservableObject, Fillable {
+final class LanguageBlockVM: ObservableObject, Fillable {
     @Published var tiles: [LanguageTileVM]
     
     init(tiles: [LanguageTileVM] = []) {
         self.tiles = tiles
     }
     
+    init(from model: LanguageBlockModel) {
+        self.tiles = model.tiles.map { .init(from: $0) }
+    }
+    
     func addTile() {
         tiles.append(LanguageTileVM())
     }
     
-    func removeTile(id: UUID) {
+    func removeTile(id: String) {
         tiles.removeAll { $0.id == id }
     }
     
@@ -21,10 +25,8 @@ class LanguageBlockVM: ObservableObject, Fillable {
     }
 }
 
-extension LanguageBlockVM {
-    func toDictionary() -> [String: Any] {
-        return [
-            "tiles": tiles.map { $0.toDictionary() } // Convert each tile to a dictionary
-        ]
+extension LanguageBlockVM: Uploadable {
+    func toModel() -> LanguageBlockModel {
+        return LanguageBlockModel(from: self)
     }
 }

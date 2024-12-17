@@ -1,10 +1,3 @@
-//
-//  Date.swift
-//  Resumer
-//
-//  Created by Danila Kokin on 12/5/24.
-//
-
 import SwiftUI
 
 extension Date {

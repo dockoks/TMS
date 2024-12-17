@@ -1,8 +1,8 @@
 import SwiftUI
 
 
-struct ContactInfoView: View {
-    @ObservedObject var viewModel: ContactInfoBlockVM = .init()
+struct ContactBlockView: View {
+    @ObservedObject var viewModel: ContactBlockVM = .init()
     
     var body: some View {
         ScrollView {
@@ -83,8 +83,8 @@ struct ContactInfoView: View {
 }
 
 #Preview {
-    @Previewable @ObservedObject var vm = ContactInfoBlockVM()
+    @Previewable @ObservedObject var vm = ContactBlockVM()
     
-    ContactInfoView(viewModel: vm)
+    ContactBlockView(viewModel: vm)
     
 }

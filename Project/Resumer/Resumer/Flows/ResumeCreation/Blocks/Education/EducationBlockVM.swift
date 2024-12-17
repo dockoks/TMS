@@ -14,11 +14,15 @@ class EducationBlockVM: ObservableObject, Fillable {
         observeKeyboard()
     }
     
+    init(from model: EducationBlockModel) {
+        self.tiles = model.tiles.map { EducationTileVM(from: $0) }
+    }
+    
     func addTile() {
         tiles.append(EducationTileVM())
     }
     
-    func removeTile(by id: UUID) {
+    func removeTile(by id: String) {
         tiles.removeAll { $0.id == id }
     }
     
@@ -34,10 +38,14 @@ class EducationBlockVM: ObservableObject, Fillable {
     }
 }
 
-extension EducationBlockVM {
+extension EducationBlockVM: Uploadable {
     func toDictionary() -> [String: Any] {
         return [
             "tiles": tiles.map { $0.toDictionary() }
         ]
+    }
+    
+    func toModel() -> EducationBlockModel {
+        return EducationBlockModel(from: self)
     }
 }

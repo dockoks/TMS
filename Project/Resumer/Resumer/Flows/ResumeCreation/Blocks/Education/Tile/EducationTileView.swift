@@ -34,9 +34,16 @@ struct EducationTileView: View {
                     .typographyStyle(.body)
                     .tint(.black)
                 if !tile.isPresent {
-                    DatePicker("End Date", selection: $tile.endDate, displayedComponents: .date)
-                        .typographyStyle(.body)
-                        .tint(.black)
+                    DatePicker(
+                        "End Date",
+                        selection: Binding(
+                            get: { tile.endDate ?? Date() },
+                            set: { newValue in tile.endDate = newValue }
+                        ),
+                        displayedComponents: .date
+                    )
+                    .typographyStyle(.body)
+                    .tint(.black)
                 }
                 HStack {
                     Text("Currently Enrolled")

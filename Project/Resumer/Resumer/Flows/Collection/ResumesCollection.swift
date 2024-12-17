@@ -7,8 +7,7 @@ struct ResumesCollection: View {
         GridItem(.flexible(), spacing: 16),
     ]
     
-    @StateObject var viewModel: ResumesCollectionVM = .init()
-    @Binding var showSignInView: Bool
+    @StateObject var viewModel: ResumesCollectionVM
     @State var showProfileView: Bool = false
     
     var body: some View {
@@ -24,11 +23,21 @@ struct ResumesCollection: View {
             .scrollIndicators(.hidden)
             .navigationTitle("Resumes")
             .background(Color.black.opacity(0.04))
+            .onAppear() {
+                Task {
+                    do {
+                        let resumes = try await FirebaseStorageManager.shared.fetchResumes(for: viewModel.userID)
+                        print("Fetched resumes: \(resumes)")
+                    } catch {
+                        print("Error fetching resumes: \(error.localizedDescription)")
+                    }
+                }
+            }
         }
     }
     
     private func addNewResumeButton() -> some View {
-        NavigationLink(destination: ResumeCreationView(resumeVM: .init())) {
+        NavigationLink(destination: ResumeCreationView(resumeVM: .init(userID: viewModel.userID))) {
             AddNewResumeItem()
                 .scaleEffectOnPressGesture()
         }
@@ -37,7 +46,7 @@ struct ResumesCollection: View {
     
     // TODO: - change to toolbar Button
     private func pfofileButton() -> some View {
-        NavigationLink(destination: ProfileView(showSignInView: $showSignInView)) {
+        NavigationLink(destination: ProfileView(viewModel: ProfileVM(showSignInView: $viewModel.showSignInView))) {
             ProfileItem()
                 .scaleEffectOnPressGesture()
         }
@@ -133,11 +142,5 @@ struct ResumeItem: View {
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .aspectRatio(210 / 297, contentMode: .fit)
         }
-    }
-}
-
-#Preview {
-    NavigationStack {
-        ResumesCollection(showSignInView: .constant(false))
     }
 }

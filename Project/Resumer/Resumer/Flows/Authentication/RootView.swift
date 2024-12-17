@@ -7,7 +7,12 @@ struct RootView: View {
     var body: some View {
         ZStack {
             NavigationStack {
-                ResumesCollection(showSignInView: $viewModel.showSignInView)
+                ResumesCollection(
+                    viewModel: .init(
+                        userID: viewModel.authData.uid,
+                        showSignInView: $viewModel.showSignInView
+                    )
+                )
             }
         }
         .onAppear() {

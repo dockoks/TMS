@@ -6,22 +6,13 @@ final class AuthenticationManager {
     static let shared = AuthenticationManager()
     private init() {}
     
-    func isAuthenticated() -> Bool {
-        do {
-            try getAuthenticatedUser()
-            return true
-        } catch {
-            return false
-        }
-    }
-    
     @discardableResult
-    func getAuthenticatedUser() throws -> AuthDataresultModel {
+    func getAuthenticatedUser() throws -> AuthDataResultModel {
         guard let user = Auth.auth().currentUser else {
             throw URLError(.badServerResponse)
         }
         
-        return AuthDataresultModel(user: user)
+        return AuthDataResultModel(user: user)
     }
     
     func signOut() throws {
@@ -33,7 +24,7 @@ final class AuthenticationManager {
 
 extension AuthenticationManager {
     @discardableResult
-    func signInWithGoogle(with tokens: GoogleSignInResultModel) async throws -> AuthDataresultModel{
+    func signInWithGoogle(with tokens: GoogleSignInResultModel) async throws -> AuthDataResultModel{
         let credential = GoogleAuthProvider.credential(
             withIDToken: tokens.idToken,
             accessToken: tokens.accessToken
@@ -41,8 +32,8 @@ extension AuthenticationManager {
         return try await signIn(with: credential)
     }
     
-    func signIn(with credential: AuthCredential) async throws -> AuthDataresultModel{
+    func signIn(with credential: AuthCredential) async throws -> AuthDataResultModel{
         let authDataResult = try await Auth.auth().signIn(with: credential)
-        return AuthDataresultModel(user: authDataResult.user)
+        return AuthDataResultModel(user: authDataResult.user)
     }
 }

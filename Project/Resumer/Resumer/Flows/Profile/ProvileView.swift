@@ -2,20 +2,12 @@ import SwiftUI
 
 
 struct ProfileView: View {
-    @StateObject private var vm = ProfileVM()
-    @Binding var showSignInView: Bool
+    @StateObject var viewModel: ProfileVM
     
     var body: some View {
         List {
             Button("Sign out") {
-                Task {
-                    do {
-                        try vm.signOut()
-                        showSignInView = true
-                    } catch {
-                        print(error)
-                    }
-                }
+                viewModel.signOut()
             }
         }
         .navigationBarTitle("Profile")

@@ -1,11 +1,5 @@
-//
-//  ResumerApp.swift
-//  Resumer
-//
-//  Created by Danila Kokin on 11/27/24.
-//
-
 import SwiftUI
+
 
 @main
 struct ResumerApp: App {
